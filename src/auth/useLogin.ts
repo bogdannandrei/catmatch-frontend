@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, login } from "../api/authApi";
+import { saveAuthSession } from "./authStorage";
 
 export function useLogin() {
     const navigate = useNavigate();
@@ -23,12 +24,13 @@ export function useLogin() {
                 password,
             });
 
-            localStorage.setItem("accessToken", authResponse.accessToken);
-            localStorage.setItem("refreshToken", authResponse.refreshToken);
-
             const currentUser = await getCurrentUser(authResponse.accessToken);
 
-            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            saveAuthSession(
+                authResponse.accessToken,
+                authResponse.refreshToken,
+                currentUser
+            );
 
             navigate("/dashboard");
         } catch (error) {

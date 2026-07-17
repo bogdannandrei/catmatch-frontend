@@ -1,23 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { logout } from "../api/authApi";
-
-type CurrentUser = {
-    id: number;
-    email: string;
-    username: string;
-    displayName: string;
-};
+import { clearAuthSession, getCurrentUser, getRefreshToken } from "../auth/authStorage";
 
 export function useDashboard() {
     const navigate = useNavigate();
 
-    const currentUserRaw = localStorage.getItem("currentUser");
-    const currentUser: CurrentUser | null = currentUserRaw
-        ? JSON.parse(currentUserRaw)
-        : null;
+    const currentUser = getCurrentUser();
 
     async function handleLogout() {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = getRefreshToken();
 
         try {
             if (refreshToken) {
@@ -26,10 +17,7 @@ export function useDashboard() {
         } catch (error) {
             console.error("Logout failed:", error);
         } finally {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("currentUser");
-
+            clearAuthSession();
             navigate("/login");
         }
     }
