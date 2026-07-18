@@ -22,4 +22,8 @@ export const API_ROUTES = {
     catSwipes: {
         base: `${API_PREFIX}/cat-swipes`,
     },
+    
+    catMatches: {
+        my: `${API_PREFIX}/cat-matches/my`,
+    },
 } as const;

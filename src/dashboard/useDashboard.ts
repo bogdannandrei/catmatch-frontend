@@ -27,6 +27,7 @@ export function useDashboard() {
         handleLogout,
         handleOpenMyCats,
         handleOpenDiscover,
+        handleOpenMatches,
     };
 
     function handleOpenMyCats() {
@@ -35,5 +36,9 @@ export function useDashboard() {
 
     function handleOpenDiscover() {
         navigate("/discover");
+    }
+
+    function handleOpenMatches() {
+        navigate("/matches");
     }
 }

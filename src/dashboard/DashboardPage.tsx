@@ -8,6 +8,7 @@ export function DashboardPage() {
         handleLogout,
         handleOpenMyCats,
         handleOpenDiscover,
+        handleOpenMatches,
     } = useDashboard();
 
     const displayName =
@@ -45,6 +46,14 @@ export function DashboardPage() {
 
                             <button className="primary-button magic-button" type="button" onClick={handleOpenMyCats}>
                                 Manage my cats
+                            </button>
+
+                            <button
+                                className="primary-button magic-button"
+                                type="button"
+                                onClick={handleOpenMatches}
+                            >
+                                My matches
                             </button>
 
                             <button
