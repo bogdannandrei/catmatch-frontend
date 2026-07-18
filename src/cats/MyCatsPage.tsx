@@ -1,11 +1,17 @@
-import { BrandBanner } from "../components/BrandBanner";
-import { FloatingPaws } from "../components/FloatingPaws";
-import { useMyCats } from "./useMyCats";
-import { useNavigate } from "react-router-dom";
+import {BrandBanner} from "../components/BrandBanner";
+import {FloatingPaws} from "../components/FloatingPaws";
+import {useMyCats} from "./useMyCats";
+import {useNavigate} from "react-router-dom";
 
 
 export function MyCatsPage() {
-    const { cats, isLoading, errorMessage } = useMyCats();
+    const {
+        cats,
+        isLoading,
+        errorMessage,
+        deletedCatId,
+        handleDeleteCat,
+    } = useMyCats();
     const navigate = useNavigate();
 
     function handleOpenCreateCatPage() {
@@ -14,10 +20,10 @@ export function MyCatsPage() {
 
     return (
         <main className="app-page explosive-page">
-            <FloatingPaws />
+            <FloatingPaws/>
 
             <div className="dashboard-shell">
-                <BrandBanner variant="compact" />
+                <BrandBanner variant="compact"/>
 
                 <section className="glass-card dashboard-main-card">
                     <span className="section-kicker">My cats</span>
@@ -54,7 +60,8 @@ export function MyCatsPage() {
                                 </p>
                             </div>
 
-                            <button className="primary-button magic-button" type="button" onClick={handleOpenCreateCatPage}>
+                            <button className="primary-button magic-button" type="button"
+                                    onClick={handleOpenCreateCatPage}>
                                 Add new cat
                             </button>
                         </div>
@@ -77,6 +84,15 @@ export function MyCatsPage() {
                                     <p>
                                         Status: <strong>{cat.status}</strong>
                                     </p>
+
+                                    <button
+                                        className="danger-button"
+                                        type="button"
+                                        onClick={() => handleDeleteCat(cat.id)}
+                                        disabled={deletedCatId === cat.id}
+                                    >
+                                        {deletedCatId === cat.id ? "Deleting..." : "Delete"}
+                                    </button>
                                 </article>
                             ))}
                         </div>

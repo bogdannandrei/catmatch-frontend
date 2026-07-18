@@ -381,6 +381,28 @@ button {
     box-shadow: var(--small-shadow);
 }
 
+.danger-button {
+    border: 1px solid rgba(190, 67, 67, 0.22);
+    border-radius: 999px;
+    padding: 12px 18px;
+    background: rgba(255, 245, 245, 0.92);
+    color: #a73333;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.danger-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: rgba(255, 235, 235, 0.98);
+    box-shadow: 0 12px 24px rgba(167, 51, 51, 0.14);
+}
+
+.danger-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
 .error-message {
     margin: 0;
     padding: 12px 14px;

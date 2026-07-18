@@ -65,3 +65,16 @@ export async function createCatProfile(
 
     return response.data;
 }
+
+export async function deleteCatProfile(catProfileId: number): Promise<void> {
+    const accessToken = getAccessToken();
+
+    await httpClient.delete(
+        API_ROUTES.catProfiles.byId(catProfileId),
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+}
