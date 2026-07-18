@@ -3,7 +3,7 @@ import { FloatingPaws } from "../components/FloatingPaws";
 import { useDashboard } from "./useDashboard";
 
 export function DashboardPage() {
-    const { currentUser, handleLogout } = useDashboard();
+    const { currentUser, handleLogout, handleOpenMyCats } = useDashboard();
 
     const displayName =
         currentUser?.displayName || currentUser?.username || currentUser?.email;
@@ -38,7 +38,7 @@ export function DashboardPage() {
                                 </p>
                             </div>
 
-                            <button className="primary-button magic-button" type="button">
+                            <button className="primary-button magic-button" type="button" onClick={handleOpenMyCats}>
                                 Manage my cats
                             </button>
                         </div>
