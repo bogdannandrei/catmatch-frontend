@@ -3,7 +3,18 @@ import { FloatingPaws } from "../components/FloatingPaws";
 import { useDiscoverCats } from "./useDiscoverCats";
 
 export function DiscoverCatsPage() {
-    const { cats, isLoading, errorMessage } = useDiscoverCats();
+    const {
+        myCats,
+        cats,
+        selectedSwiperCatId,
+        setSelectedSwiperCatId,
+        isLoading,
+        isLoadingDiscover,
+        errorMessage,
+        swipingCatId,
+        matchMessage,
+        handleSwipe,
+    } = useDiscoverCats();
 
     return (
         <main className="app-page explosive-page">
@@ -20,8 +31,7 @@ export function DiscoverCatsPage() {
                     </h1>
 
                     <p className="dashboard-hero-copy">
-                        These are active cat profiles from other users. Later we will add
-                        like, skip and match logic here.
+                        Choose one of your cats, then like or skip cats from other users.
                     </p>
 
                     {isLoading && (
@@ -36,20 +46,69 @@ export function DiscoverCatsPage() {
                         </p>
                     )}
 
-                    {!isLoading && !errorMessage && cats.length === 0 && (
+                    {matchMessage && (
+                        <p className="success-message">
+                            {matchMessage}
+                        </p>
+                    )}
+
+                    {!isLoading && myCats.length === 0 && (
                         <div className="mission-card">
                             <div>
-                                <span className="mission-label">No cats found</span>
-                                <h2>The discovery feed is quiet right now.</h2>
+                                <span className="mission-label">No cat selected</span>
+                                <h2>You need at least one cat profile first.</h2>
                                 <p>
-                                    Create another test user with at least one active cat profile,
-                                    then come back here.
+                                    Create one of your cats before using Discover.
                                 </p>
                             </div>
                         </div>
                     )}
 
-                    {!isLoading && cats.length > 0 && (
+                    {!isLoading && myCats.length > 0 && (
+                        <div className="mission-card discover-selector-card">
+                            <div>
+                                <span className="mission-label">Swiping as</span>
+                                <h2>Choose your cat profile</h2>
+                                <p>
+                                    Likes and skips are made from one cat profile to another.
+                                </p>
+                            </div>
+
+                            <div className="form-field discover-select-field">
+                                <select
+                                    value={selectedSwiperCatId ?? ""}
+                                    onChange={(event) => setSelectedSwiperCatId(Number(event.target.value))}
+                                >
+                                    {myCats.map((cat) => (
+                                        <option value={cat.id} key={cat.id}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    )}
+
+                    {isLoadingDiscover && (
+                        <p className="tiny-note">
+                            Refreshing discover feed...
+                        </p>
+                    )}
+
+                    {!isLoading && !isLoadingDiscover && !errorMessage && cats.length === 0 && myCats.length > 0 && (
+                        <div className="mission-card">
+                            <div>
+                                <span className="mission-label">No cats found</span>
+                                <h2>The discovery feed is quiet right now.</h2>
+                                <p>
+                                    There are no more cats available for the selected cat profile.
+                                    Try selecting another one of your cats.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {!isLoading && !isLoadingDiscover && cats.length > 0 && (
                         <div className="quick-grid">
                             {cats.map((cat) => (
                                 <article className="quick-card quick-card-wild" key={cat.id}>
@@ -68,12 +127,22 @@ export function DiscoverCatsPage() {
                                     </p>
 
                                     <div className="actions-row">
-                                        <button className="secondary-button" type="button">
-                                            Skip
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => handleSwipe(cat.id, "SKIP")}
+                                            disabled={swipingCatId === cat.id || !selectedSwiperCatId}
+                                        >
+                                            {swipingCatId === cat.id ? "Saving..." : "Skip"}
                                         </button>
 
-                                        <button className="primary-button magic-button" type="button">
-                                            Like
+                                        <button
+                                            className="primary-button magic-button"
+                                            type="button"
+                                            onClick={() => handleSwipe(cat.id, "LIKE")}
+                                            disabled={swipingCatId === cat.id || !selectedSwiperCatId}
+                                        >
+                                            {swipingCatId === cat.id ? "Saving..." : "Like"}
                                         </button>
                                     </div>
                                 </article>

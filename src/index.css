@@ -931,3 +931,21 @@ button {
         transition-duration: 0.001ms !important;
     }
 }
+
+
+.success-message {
+    border: 1px solid rgba(66, 150, 104, 0.24);
+    border-radius: var(--radius-sm);
+    padding: 13px 15px;
+    background: rgba(236, 255, 244, 0.9);
+    color: #267447;
+    font-weight: 800;
+}
+
+.discover-selector-card {
+    align-items: center;
+}
+
+.discover-select-field {
+    min-width: 220px;
+}

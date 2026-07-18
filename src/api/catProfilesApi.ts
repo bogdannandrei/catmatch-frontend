@@ -86,9 +86,16 @@ export async function deleteCatProfile(catProfileId: number): Promise<void> {
     await httpClient.delete(API_ROUTES.catProfiles.byId(catProfileId));
 }
 
-export async function discoverCatProfiles(): Promise<CatProfileResponse[]> {
+export async function discoverCatProfiles(
+    swiperCatProfileId: number
+): Promise<CatProfileResponse[]> {
     const response = await httpClient.get<CatProfileResponse[]>(
-        API_ROUTES.catProfiles.discover
+        API_ROUTES.catProfiles.discover,
+        {
+            params: {
+                swiperCatProfileId,
+            },
+        }
     );
 
     return response.data;
