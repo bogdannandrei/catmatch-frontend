@@ -36,12 +36,8 @@ export async function login(request: LoginRequest): Promise<AuthResponse> {
     return response.data;
 }
 
-export async function getCurrentUser(accessToken: string): Promise<UserResponse> {
-    const response = await httpClient.get<UserResponse>(API_ROUTES.users.me, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
+export async function getCurrentUser(): Promise<UserResponse> {
+    const response = await httpClient.get<UserResponse>(API_ROUTES.users.me);
 
     return response.data;
 }

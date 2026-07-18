@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, login } from "../api/authApi";
+import { login } from "../api/authApi";
 import { saveAuthSession } from "./authStorage";
 
 export function useLogin() {
@@ -24,12 +24,11 @@ export function useLogin() {
                 password,
             });
 
-            const currentUser = await getCurrentUser(authResponse.accessToken);
 
             saveAuthSession(
                 authResponse.accessToken,
                 authResponse.refreshToken,
-                currentUser
+                authResponse.user
             );
 
             navigate("/dashboard");

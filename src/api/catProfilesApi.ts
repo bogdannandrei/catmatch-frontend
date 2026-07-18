@@ -1,6 +1,5 @@
-import {getAccessToken} from "../auth/authStorage";
-import {API_ROUTES} from "./apiRoutes";
-import {httpClient} from "./httpClient";
+import { API_ROUTES } from "./apiRoutes";
+import { httpClient } from "./httpClient";
 
 export type CatGender = "MALE" | "FEMALE" | "UNKNOWN";
 
@@ -45,15 +44,16 @@ export type UpdateCatProfileRequest = {
 };
 
 export async function getMyCatProfiles(): Promise<CatProfileResponse[]> {
-    const accessToken = getAccessToken();
-
     const response = await httpClient.get<CatProfileResponse[]>(
-        API_ROUTES.catProfiles.my,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
+        API_ROUTES.catProfiles.my
+    );
+
+    return response.data;
+}
+
+export async function getCatProfile(catProfileId: number): Promise<CatProfileResponse> {
+    const response = await httpClient.get<CatProfileResponse>(
+        API_ROUTES.catProfiles.byId(catProfileId)
     );
 
     return response.data;
@@ -62,44 +62,9 @@ export async function getMyCatProfiles(): Promise<CatProfileResponse[]> {
 export async function createCatProfile(
     request: CreateCatProfileRequest
 ): Promise<CatProfileResponse> {
-    const accessToken = getAccessToken();
-
     const response = await httpClient.post<CatProfileResponse>(
         API_ROUTES.catProfiles.base,
-        request,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
-    );
-
-    return response.data;
-}
-
-export async function deleteCatProfile(catProfileId: number): Promise<void> {
-    const accessToken = getAccessToken();
-
-    await httpClient.delete(
-        API_ROUTES.catProfiles.byId(catProfileId),
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
-    );
-}
-
-export async function getCatProfile(catProfileId: number): Promise<CatProfileResponse> {
-    const accessToken = getAccessToken();
-
-    const response = await httpClient.get<CatProfileResponse>(
-        API_ROUTES.catProfiles.byId(catProfileId),
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
+        request
     );
 
     return response.data;
@@ -109,17 +74,14 @@ export async function updateCatProfile(
     catProfileId: number,
     request: UpdateCatProfileRequest
 ): Promise<CatProfileResponse> {
-    const accessToken = getAccessToken();
-
     const response = await httpClient.put<CatProfileResponse>(
         API_ROUTES.catProfiles.byId(catProfileId),
-        request,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
+        request
     );
 
     return response.data;
+}
+
+export async function deleteCatProfile(catProfileId: number): Promise<void> {
+    await httpClient.delete(API_ROUTES.catProfiles.byId(catProfileId));
 }
