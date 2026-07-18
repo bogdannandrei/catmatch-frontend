@@ -18,6 +18,10 @@ export function MyCatsPage() {
         navigate("/my-cats/new");
     }
 
+    function handleOpenEditCatPage(catProfileId: number) {
+        navigate(`/my-cats/${catProfileId}/edit`);
+    }
+
     return (
         <main className="app-page explosive-page">
             <FloatingPaws/>
@@ -85,14 +89,24 @@ export function MyCatsPage() {
                                         Status: <strong>{cat.status}</strong>
                                     </p>
 
-                                    <button
-                                        className="danger-button"
-                                        type="button"
-                                        onClick={() => handleDeleteCat(cat.id)}
-                                        disabled={deletedCatId === cat.id}
-                                    >
-                                        {deletedCatId === cat.id ? "Deleting..." : "Delete"}
-                                    </button>
+                                    <div className="actions-row">
+                                        <button
+                                            className="secondary-button"
+                                            type="button"
+                                            onClick={() => handleOpenEditCatPage(cat.id)}
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            className="danger-button"
+                                            type="button"
+                                            onClick={() => handleDeleteCat(cat.id)}
+                                            disabled={deletedCatId === cat.id}
+                                        >
+                                            {deletedCatId === cat.id ? "Deleting..." : "Delete"}
+                                        </button>
+                                    </div>
                                 </article>
                             ))}
                         </div>

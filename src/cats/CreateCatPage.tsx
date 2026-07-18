@@ -1,6 +1,6 @@
-import type { CatGender } from "../api/catProfilesApi";
 import { BrandBanner } from "../components/BrandBanner";
 import { FloatingPaws } from "../components/FloatingPaws";
+import { CatProfileForm } from "./CatProfileForm";
 import { useCreateCat } from "./useCreateCat";
 
 export function CreateCatPage() {
@@ -46,107 +46,30 @@ export function CreateCatPage() {
                         personality tags, matching preferences and profile editing.
                     </p>
 
-                    <form className="form-stack cat-form" onSubmit={handleSubmit}>
-                        <div className="form-field">
-                            <label htmlFor="name">Name</label>
-                            <input
-                                id="name"
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                                placeholder="Mango"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="breed">Breed</label>
-                            <input
-                                id="breed"
-                                value={breed}
-                                onChange={(event) => setBreed(event.target.value)}
-                                placeholder="Orange tabby"
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="gender">Gender</label>
-                            <select
-                                id="gender"
-                                value={gender}
-                                onChange={(event) => setGender(event.target.value as CatGender)}
-                            >
-                                <option value="UNKNOWN">Unknown</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
-                            </select>
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="birthDate">Birth date</label>
-                            <input
-                                id="birthDate"
-                                type="date"
-                                value={birthDate}
-                                onChange={(event) => setBirthDate(event.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="bio">Bio</label>
-                            <textarea
-                                id="bio"
-                                value={bio}
-                                onChange={(event) => setBio(event.target.value)}
-                                placeholder="Confident, dramatic, emotionally invested."
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="city">City</label>
-                            <input
-                                id="city"
-                                value={city}
-                                onChange={(event) => setCity(event.target.value)}
-                                placeholder="Bucharest"
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="country">Country</label>
-                            <input
-                                id="country"
-                                value={country}
-                                onChange={(event) => setCountry(event.target.value)}
-                                placeholder="Romania"
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <label htmlFor="profilePhotoUrl">Profile photo URL</label>
-                            <input
-                                id="profilePhotoUrl"
-                                value={profilePhotoUrl}
-                                onChange={(event) => setProfilePhotoUrl(event.target.value)}
-                                placeholder="https://example.com/mango.png"
-                            />
-                        </div>
-
-                        {errorMessage && (
-                            <p className="error-message">
-                                {errorMessage}
-                            </p>
-                        )}
-
-                        <div className="actions-row">
-                            <button className="primary-button magic-button" type="submit" disabled={isLoading}>
-                                {isLoading ? "Creating profile..." : "Create cat profile"}
-                            </button>
-
-                            <button className="secondary-button" type="button" onClick={handleCancel}>
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
+                    <CatProfileForm
+                        name={name}
+                        setName={setName}
+                        breed={breed}
+                        setBreed={setBreed}
+                        gender={gender}
+                        setGender={setGender}
+                        birthDate={birthDate}
+                        setBirthDate={setBirthDate}
+                        bio={bio}
+                        setBio={setBio}
+                        city={city}
+                        setCity={setCity}
+                        country={country}
+                        setCountry={setCountry}
+                        profilePhotoUrl={profilePhotoUrl}
+                        setProfilePhotoUrl={setProfilePhotoUrl}
+                        errorMessage={errorMessage}
+                        isSaving={isLoading}
+                        submitLabel="Create cat profile"
+                        savingLabel="Creating profile..."
+                        onSubmit={handleSubmit}
+                        onCancel={handleCancel}
+                    />
                 </section>
             </div>
         </main>

@@ -33,6 +33,17 @@ export type CreateCatProfileRequest = {
     profilePhotoUrl: string | null;
 };
 
+export type UpdateCatProfileRequest = {
+    name: string;
+    breed: string | null;
+    gender: CatGender;
+    birthDate: string | null;
+    bio: string | null;
+    city: string | null;
+    country: string | null;
+    profilePhotoUrl: string | null;
+};
+
 export async function getMyCatProfiles(): Promise<CatProfileResponse[]> {
     const accessToken = getAccessToken();
 
@@ -77,4 +88,38 @@ export async function deleteCatProfile(catProfileId: number): Promise<void> {
             },
         }
     );
+}
+
+export async function getCatProfile(catProfileId: number): Promise<CatProfileResponse> {
+    const accessToken = getAccessToken();
+
+    const response = await httpClient.get<CatProfileResponse>(
+        API_ROUTES.catProfiles.byId(catProfileId),
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    return response.data;
+}
+
+export async function updateCatProfile(
+    catProfileId: number,
+    request: UpdateCatProfileRequest
+): Promise<CatProfileResponse> {
+    const accessToken = getAccessToken();
+
+    const response = await httpClient.put<CatProfileResponse>(
+        API_ROUTES.catProfiles.byId(catProfileId),
+        request,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    return response.data;
 }
