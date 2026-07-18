@@ -51,7 +51,9 @@ body {
 }
 
 button,
-input {
+input,
+select,
+textarea {
     font: inherit;
 }
 
@@ -305,7 +307,9 @@ button {
     font-weight: 850;
 }
 
-.form-field input {
+.form-field input,
+.form-field select,
+.form-field textarea {
     width: 100%;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -316,15 +320,27 @@ button {
     transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease, transform 160ms ease;
 }
 
-.form-field input::placeholder {
+.form-field input::placeholder,
+.form-field textarea::placeholder {
     color: #b49b91;
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
     border-color: var(--primary);
     background: #ffffff;
     box-shadow: 0 0 0 4px rgba(255, 116, 102, 0.16);
     transform: translateY(-1px);
+}
+
+.form-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.cat-form {
+    margin-top: 28px;
 }
 
 .primary-button,

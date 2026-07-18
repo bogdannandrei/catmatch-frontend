@@ -1,9 +1,16 @@
 import { BrandBanner } from "../components/BrandBanner";
 import { FloatingPaws } from "../components/FloatingPaws";
 import { useMyCats } from "./useMyCats";
+import { useNavigate } from "react-router-dom";
+
 
 export function MyCatsPage() {
     const { cats, isLoading, errorMessage } = useMyCats();
+    const navigate = useNavigate();
+
+    function handleOpenCreateCatPage() {
+        navigate("/my-cats/new");
+    }
 
     return (
         <main className="app-page explosive-page">
@@ -47,7 +54,7 @@ export function MyCatsPage() {
                                 </p>
                             </div>
 
-                            <button className="primary-button magic-button" type="button">
+                            <button className="primary-button magic-button" type="button" onClick={handleOpenCreateCatPage}>
                                 Add new cat
                             </button>
                         </div>
@@ -76,7 +83,7 @@ export function MyCatsPage() {
                     )}
 
                     {!isLoading && cats.length > 0 && (
-                        <button className="primary-button magic-button" type="button">
+                        <button className="primary-button magic-button" type="button" onClick={handleOpenCreateCatPage}>
                             Add new cat
                         </button>
                     )}

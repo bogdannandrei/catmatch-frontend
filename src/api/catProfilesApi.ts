@@ -1,6 +1,6 @@
-import { getAccessToken } from "../auth/authStorage";
-import { API_ROUTES } from "./apiRoutes";
-import { httpClient } from "./httpClient";
+import {getAccessToken} from "../auth/authStorage";
+import {API_ROUTES} from "./apiRoutes";
+import {httpClient} from "./httpClient";
 
 export type CatGender = "MALE" | "FEMALE" | "UNKNOWN";
 
@@ -22,11 +22,40 @@ export type CatProfileResponse = {
     updatedAt: string;
 };
 
+export type CreateCatProfileRequest = {
+    name: string;
+    breed: string | null;
+    gender: CatGender;
+    birthDate: string | null;
+    bio: string | null;
+    city: string | null;
+    country: string | null;
+    profilePhotoUrl: string | null;
+};
+
 export async function getMyCatProfiles(): Promise<CatProfileResponse[]> {
     const accessToken = getAccessToken();
 
     const response = await httpClient.get<CatProfileResponse[]>(
         API_ROUTES.catProfiles.my,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    return response.data;
+}
+
+export async function createCatProfile(
+    request: CreateCatProfileRequest
+): Promise<CatProfileResponse> {
+    const accessToken = getAccessToken();
+
+    const response = await httpClient.post<CatProfileResponse>(
+        API_ROUTES.catProfiles.base,
+        request,
         {
             headers: {
                 Authorization: `Bearer ${accessToken}`,

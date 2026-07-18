@@ -4,6 +4,7 @@ import { DashboardPage } from "../dashboard/DashboardPage";
 import { GuestRoute } from "./GuestRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import {MyCatsPage} from "../cats/MyCatsPage.tsx";
+import {CreateCatPage} from "../cats/CreateCatPage.tsx";
 
 export function AppRouter() {
     return (
@@ -17,6 +18,7 @@ export function AppRouter() {
             <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/my-cats" element={<MyCatsPage />} />
+                <Route path="/my-cats/new" element={<CreateCatPage />} />
             </Route>
         </Routes>
 
