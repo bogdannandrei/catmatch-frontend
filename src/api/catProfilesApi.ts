@@ -85,3 +85,11 @@ export async function updateCatProfile(
 export async function deleteCatProfile(catProfileId: number): Promise<void> {
     await httpClient.delete(API_ROUTES.catProfiles.byId(catProfileId));
 }
+
+export async function discoverCatProfiles(): Promise<CatProfileResponse[]> {
+    const response = await httpClient.get<CatProfileResponse[]>(
+        API_ROUTES.catProfiles.discover
+    );
+
+    return response.data;
+}

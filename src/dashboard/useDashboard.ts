@@ -26,9 +26,14 @@ export function useDashboard() {
         currentUser,
         handleLogout,
         handleOpenMyCats,
+        handleOpenDiscover,
     };
 
     function handleOpenMyCats() {
         navigate("/my-cats");
+    }
+
+    function handleOpenDiscover() {
+        navigate("/discover");
     }
 }

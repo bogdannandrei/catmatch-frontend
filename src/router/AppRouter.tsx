@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import {MyCatsPage} from "../cats/MyCatsPage.tsx";
 import {CreateCatPage} from "../cats/CreateCatPage.tsx";
 import {EditCatPage} from "../cats/EditCatPage.tsx";
+import {DiscoverCatsPage} from "../cats/DiscoverCatsPage.tsx";
 
 export function AppRouter() {
     return (
@@ -21,6 +22,7 @@ export function AppRouter() {
                 <Route path="/my-cats" element={<MyCatsPage />} />
                 <Route path="/my-cats/new" element={<CreateCatPage />} />
                 <Route path="/my-cats/:id/edit" element={<EditCatPage />} />
+                <Route path="/discover" element={<DiscoverCatsPage />} />
             </Route>
         </Routes>
 

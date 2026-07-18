@@ -1,19 +1,24 @@
-import { BrandBanner } from "../components/BrandBanner";
-import { FloatingPaws } from "../components/FloatingPaws";
-import { useDashboard } from "./useDashboard";
+import {BrandBanner} from "../components/BrandBanner";
+import {FloatingPaws} from "../components/FloatingPaws";
+import {useDashboard} from "./useDashboard";
 
 export function DashboardPage() {
-    const { currentUser, handleLogout, handleOpenMyCats } = useDashboard();
+    const {
+        currentUser,
+        handleLogout,
+        handleOpenMyCats,
+        handleOpenDiscover,
+    } = useDashboard();
 
     const displayName =
         currentUser?.displayName || currentUser?.username || currentUser?.email;
 
     return (
         <main className="app-page explosive-page">
-            <FloatingPaws />
+            <FloatingPaws/>
 
             <div className="dashboard-shell">
-                <BrandBanner variant="compact" />
+                <BrandBanner variant="compact"/>
 
                 <section className="dashboard-layout">
                     <div className="glass-card dashboard-main-card">
@@ -40,6 +45,14 @@ export function DashboardPage() {
 
                             <button className="primary-button magic-button" type="button" onClick={handleOpenMyCats}>
                                 Manage my cats
+                            </button>
+
+                            <button
+                                className="primary-button magic-button"
+                                type="button"
+                                onClick={handleOpenDiscover}
+                            >
+                                Discover cats
                             </button>
                         </div>
 
@@ -71,7 +84,7 @@ export function DashboardPage() {
 
                         <p>
                             Current user:
-                            <br />
+                            <br/>
                             <strong>{displayName}</strong>
                         </p>
 
