@@ -1,15 +1,22 @@
 import { BrandBanner } from "../components/BrandBanner";
 import { FloatingPaws } from "../components/FloatingPaws";
+import { AppNav } from "../components/AppNav";
 import { useMyMatches } from "./useMyMatches";
-import {AppNav} from "../components/AppNav.tsx";
 
 export function MatchesPage() {
-    const { matches, isLoading, errorMessage } = useMyMatches();
+    const {
+        matches,
+        isLoading,
+        errorMessage,
+        startingChatMatchId,
+        handleStartChat,
+    } = useMyMatches();
 
     return (
         <main className="app-page explosive-page">
             <FloatingPaws />
-            <AppNav/>
+            <AppNav />
+
             <div className="dashboard-shell">
                 <BrandBanner variant="compact" />
 
@@ -21,8 +28,8 @@ export function MatchesPage() {
                     </h1>
 
                     <p className="dashboard-hero-copy">
-                        These are the cats that liked your cats back. Later we can add
-                        chat, match status and profile details.
+                        These are the cats that liked your cats back. Start a chat with
+                        the owner and see where the chaos goes.
                     </p>
 
                     {isLoading && (
@@ -54,8 +61,8 @@ export function MatchesPage() {
                         <div className="quick-grid">
                             {matches.map((match) => (
                                 <article
-                                    className="quick-card quick-card-wild"
-                                    key={`${match.myCatProfileId}-${match.matchedCatProfileId}`}
+                                    className="quick-card quick-card-wild match-card"
+                                    key={match.id}
                                 >
                                     <span>😻</span>
 
@@ -89,6 +96,15 @@ export function MatchesPage() {
                                     <p className="tiny-note">
                                         Matched at: {formatDate(match.matchedAt)}
                                     </p>
+
+                                    <button
+                                        className="primary-button magic-button"
+                                        type="button"
+                                        onClick={() => handleStartChat(match.id)}
+                                        disabled={startingChatMatchId === match.id}
+                                    >
+                                        {startingChatMatchId === match.id ? "Opening chat..." : "Start chat"}
+                                    </button>
                                 </article>
                             ))}
                         </div>

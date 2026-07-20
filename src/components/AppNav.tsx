@@ -41,6 +41,7 @@ export function AppNav() {
                 <NavLink to="/my-cats">My cats</NavLink>
                 <NavLink to="/discover">Discover</NavLink>
                 <NavLink to="/matches">Matches</NavLink>
+                <NavLink to="/chats">Chats</NavLink>
             </div>
 
             <div className="app-nav-user">

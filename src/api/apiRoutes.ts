@@ -7,23 +7,24 @@ export const API_ROUTES = {
         refresh: `${API_PREFIX}/auth/refresh`,
         logout: `${API_PREFIX}/auth/logout`,
     },
-
     users: {
         me: `${API_PREFIX}/users/me`,
     },
-
     catProfiles: {
         base: `${API_PREFIX}/cat-profiles`,
         my: `${API_PREFIX}/cat-profiles/my`,
         discover: `${API_PREFIX}/cat-profiles/discover`,
         byId: (id: number) => `${API_PREFIX}/cat-profiles/${id}`,
     },
-
     catSwipes: {
         base: `${API_PREFIX}/cat-swipes`,
     },
-    
     catMatches: {
         my: `${API_PREFIX}/cat-matches/my`,
+    },
+    chats: {
+        base: `${API_PREFIX}/chats`,
+        my: `${API_PREFIX}/chats/my`,
+        messages: (id: number) => `${API_PREFIX}/chats/${id}/messages`,
     },
 } as const;

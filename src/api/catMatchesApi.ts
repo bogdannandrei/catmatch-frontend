@@ -1,7 +1,11 @@
 import { API_ROUTES } from "./apiRoutes";
 import { httpClient } from "./httpClient";
 
+export type CatMatchStatus = "ACTIVE" | "UNMATCHED";
+
 export type CatMatchResponse = {
+    id: number;
+
     myCatProfileId: number;
     myCatName: string;
     myCatBreed: string | null;
@@ -15,7 +19,10 @@ export type CatMatchResponse = {
     matchedCatCountry: string | null;
     matchedCatProfilePhotoUrl: string | null;
 
+    status: CatMatchStatus;
     matchedAt: string;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export async function getMyMatches(): Promise<CatMatchResponse[]> {

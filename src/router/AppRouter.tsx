@@ -8,6 +8,8 @@ import {CreateCatPage} from "../cats/CreateCatPage.tsx";
 import {EditCatPage} from "../cats/EditCatPage.tsx";
 import {DiscoverCatsPage} from "../cats/DiscoverCatsPage.tsx";
 import {MatchesPage} from "../cats/MatchesPage.tsx";
+import { ChatsPage } from "../chat/ChatsPage";
+import { ChatRoomPage } from "../chat/ChatRoomPage";
 
 export function AppRouter() {
     return (
@@ -25,6 +27,8 @@ export function AppRouter() {
                 <Route path="/my-cats/:id/edit" element={<EditCatPage />} />
                 <Route path="/discover" element={<DiscoverCatsPage />} />
                 <Route path="/matches" element={<MatchesPage />} />
+                <Route path="/chats" element={<ChatsPage />} />
+                <Route path="/chats/:id" element={<ChatRoomPage />} />
             </Route>
         </Routes>
 
