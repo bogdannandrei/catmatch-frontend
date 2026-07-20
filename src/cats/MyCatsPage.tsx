@@ -2,6 +2,7 @@ import {BrandBanner} from "../components/BrandBanner";
 import {FloatingPaws} from "../components/FloatingPaws";
 import {useMyCats} from "./useMyCats";
 import {useNavigate} from "react-router-dom";
+import {AppNav} from "../components/AppNav.tsx";
 
 
 export function MyCatsPage() {
@@ -25,7 +26,7 @@ export function MyCatsPage() {
     return (
         <main className="app-page explosive-page">
             <FloatingPaws/>
-
+            <AppNav/>
             <div className="dashboard-shell">
                 <BrandBanner variant="compact"/>
 

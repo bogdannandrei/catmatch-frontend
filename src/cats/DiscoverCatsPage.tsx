@@ -1,6 +1,8 @@
-import { BrandBanner } from "../components/BrandBanner";
-import { FloatingPaws } from "../components/FloatingPaws";
-import { useDiscoverCats } from "./useDiscoverCats";
+import {BrandBanner} from "../components/BrandBanner";
+import {FloatingPaws} from "../components/FloatingPaws";
+import {useDiscoverCats} from "./useDiscoverCats";
+import {AppNav} from "../components/AppNav.tsx";
+import {DiscoverCatDeck} from "./DiscoverCatDeck";
 
 export function DiscoverCatsPage() {
     const {
@@ -10,18 +12,22 @@ export function DiscoverCatsPage() {
         setSelectedSwiperCatId,
         isLoading,
         isLoadingDiscover,
+        isRefilling,
         errorMessage,
         swipingCatId,
         matchMessage,
+        lastSwipe,
+        isUndoing,
         handleSwipe,
+        handleUndoLastSwipe,
     } = useDiscoverCats();
 
     return (
         <main className="app-page explosive-page">
-            <FloatingPaws />
-
+            <FloatingPaws/>
+            <AppNav/>
             <div className="dashboard-shell">
-                <BrandBanner variant="compact" />
+                <BrandBanner variant="compact"/>
 
                 <section className="glass-card dashboard-main-card">
                     <span className="section-kicker">Discover</span>
@@ -74,6 +80,27 @@ export function DiscoverCatsPage() {
                                 </p>
                             </div>
 
+                            {lastSwipe && (
+                                <div className="undo-swipe-card">
+                                    <div>
+                                        <span className="mission-label">Last swipe</span>
+                                        <p>
+                                            You {lastSwipe.decision === "LIKE" ? "liked" : "skipped"}{" "}
+                                            <strong>{lastSwipe.targetCat.name}</strong>
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        className="secondary-button"
+                                        type="button"
+                                        onClick={handleUndoLastSwipe}
+                                        disabled={isUndoing}
+                                    >
+                                        {isUndoing ? "Undoing..." : "Undo"}
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="form-field discover-select-field">
                                 <select
                                     value={selectedSwiperCatId ?? ""}
@@ -94,6 +121,11 @@ export function DiscoverCatsPage() {
                             Refreshing discover feed...
                         </p>
                     )}
+                    {isRefilling && (
+                        <p className="tiny-note">
+                            Adding more cats to your deck...
+                        </p>
+                    )}
 
                     {!isLoading && !isLoadingDiscover && !errorMessage && cats.length === 0 && myCats.length > 0 && (
                         <div className="mission-card">
@@ -109,76 +141,15 @@ export function DiscoverCatsPage() {
                     )}
 
                     {!isLoading && !isLoadingDiscover && cats.length > 0 && (
-                        <div className="quick-grid">
-                            {cats.map((cat) => (
-                                <article className="quick-card quick-card-wild" key={cat.id}>
-                                    <span>{getCatEmoji(cat.name)}</span>
-
-                                    <h3>{cat.name}</h3>
-
-                                    <p>
-                                        <strong>{cat.breed || "Unknown breed"}</strong>
-                                    </p>
-
-                                    <p>{cat.bio || "No bio yet. Mysterious energy."}</p>
-
-                                    <p>
-                                        Location: <strong>{formatLocation(cat.city, cat.country)}</strong>
-                                    </p>
-
-                                    <div className="actions-row">
-                                        <button
-                                            className="secondary-button"
-                                            type="button"
-                                            onClick={() => handleSwipe(cat.id, "SKIP")}
-                                            disabled={swipingCatId === cat.id || !selectedSwiperCatId}
-                                        >
-                                            {swipingCatId === cat.id ? "Saving..." : "Skip"}
-                                        </button>
-
-                                        <button
-                                            className="primary-button magic-button"
-                                            type="button"
-                                            onClick={() => handleSwipe(cat.id, "LIKE")}
-                                            disabled={swipingCatId === cat.id || !selectedSwiperCatId}
-                                        >
-                                            {swipingCatId === cat.id ? "Saving..." : "Like"}
-                                        </button>
-                                    </div>
-                                </article>
-                            ))}
-                        </div>
+                        <DiscoverCatDeck
+                            cats={cats}
+                            swipingCatId={swipingCatId}
+                            selectedSwiperCatId={selectedSwiperCatId}
+                            onSwipe={handleSwipe}
+                        />
                     )}
                 </section>
             </div>
         </main>
     );
-}
-
-function getCatEmoji(catName: string): string {
-    if (catName.toLowerCase() === "mango") {
-        return "🐈";
-    }
-
-    if (catName.toLowerCase() === "papaya") {
-        return "🐈‍⬛";
-    }
-
-    return "🐾";
-}
-
-function formatLocation(city: string | null, country: string | null): string {
-    if (city && country) {
-        return `${city}, ${country}`;
-    }
-
-    if (city) {
-        return city;
-    }
-
-    if (country) {
-        return country;
-    }
-
-    return "Unknown location";
 }

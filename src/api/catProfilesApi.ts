@@ -87,13 +87,15 @@ export async function deleteCatProfile(catProfileId: number): Promise<void> {
 }
 
 export async function discoverCatProfiles(
-    swiperCatProfileId: number
+    swiperCatProfileId: number,
+    limit = 20
 ): Promise<CatProfileResponse[]> {
     const response = await httpClient.get<CatProfileResponse[]>(
         API_ROUTES.catProfiles.discover,
         {
             params: {
                 swiperCatProfileId,
+                limit,
             },
         }
     );

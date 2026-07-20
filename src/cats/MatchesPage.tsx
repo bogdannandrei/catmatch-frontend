@@ -1,6 +1,7 @@
 import { BrandBanner } from "../components/BrandBanner";
 import { FloatingPaws } from "../components/FloatingPaws";
 import { useMyMatches } from "./useMyMatches";
+import {AppNav} from "../components/AppNav.tsx";
 
 export function MatchesPage() {
     const { matches, isLoading, errorMessage } = useMyMatches();
@@ -8,7 +9,7 @@ export function MatchesPage() {
     return (
         <main className="app-page explosive-page">
             <FloatingPaws />
-
+            <AppNav/>
             <div className="dashboard-shell">
                 <BrandBanner variant="compact" />
 

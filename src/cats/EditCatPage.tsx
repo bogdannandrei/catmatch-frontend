@@ -2,6 +2,7 @@ import { BrandBanner } from "../components/BrandBanner";
 import { FloatingPaws } from "../components/FloatingPaws";
 import { CatProfileForm } from "./CatProfileForm";
 import { useEditCat } from "./useEditCat";
+import {AppNav} from "../components/AppNav.tsx";
 
 export function EditCatPage() {
     const {
@@ -31,7 +32,7 @@ export function EditCatPage() {
     return (
         <main className="app-page explosive-page">
             <FloatingPaws />
-
+            <AppNav/>
             <div className="dashboard-shell">
                 <BrandBanner variant="compact" />
 

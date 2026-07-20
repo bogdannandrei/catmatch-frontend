@@ -1,6 +1,7 @@
 import {BrandBanner} from "../components/BrandBanner";
 import {FloatingPaws} from "../components/FloatingPaws";
 import {useDashboard} from "./useDashboard";
+import {AppNav} from "../components/AppNav.tsx";
 
 export function DashboardPage() {
     const {
@@ -17,7 +18,7 @@ export function DashboardPage() {
     return (
         <main className="app-page explosive-page">
             <FloatingPaws/>
-
+            <AppNav/>
             <div className="dashboard-shell">
                 <BrandBanner variant="compact"/>
 
@@ -44,25 +45,43 @@ export function DashboardPage() {
                                 </p>
                             </div>
 
-                            <button className="primary-button magic-button" type="button" onClick={handleOpenMyCats}>
-                                Manage my cats
-                            </button>
+                            <div className="dashboard-action-stack">
+                                <button
+                                    className="dashboard-action-button"
+                                    type="button"
+                                    onClick={handleOpenMyCats}
+                                >
+                                    <span>🐱</span>
+                                    <div>
+                                        <strong>Manage my cats</strong>
+                                        <small>Create, edit and organize your cat profiles</small>
+                                    </div>
+                                </button>
 
-                            <button
-                                className="primary-button magic-button"
-                                type="button"
-                                onClick={handleOpenMatches}
-                            >
-                                My matches
-                            </button>
+                                <button
+                                    className="dashboard-action-button"
+                                    type="button"
+                                    onClick={handleOpenMatches}
+                                >
+                                    <span>💞</span>
+                                    <div>
+                                        <strong>My matches</strong>
+                                        <small>See cats that liked your cats back</small>
+                                    </div>
+                                </button>
 
-                            <button
-                                className="primary-button magic-button"
-                                type="button"
-                                onClick={handleOpenDiscover}
-                            >
-                                Discover cats
-                            </button>
+                                <button
+                                    className="dashboard-action-button"
+                                    type="button"
+                                    onClick={handleOpenDiscover}
+                                >
+                                    <span>🧶</span>
+                                    <div>
+                                        <strong>Discover cats</strong>
+                                        <small>Swipe through potential matches</small>
+                                    </div>
+                                </button>
+                            </div>
                         </div>
 
                         <div className="quick-grid">

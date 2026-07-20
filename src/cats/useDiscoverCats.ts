@@ -7,7 +7,17 @@ import {
 import {
     createCatSwipe,
     type CatSwipeDecision,
+    undoCatSwipe,
 } from "../api/catSwipesApi";
+
+const DISCOVER_LIMIT = 20;
+const REFILL_THRESHOLD = 5;
+
+type LastSwipe = {
+    swiperCatProfileId: number;
+    targetCat: CatProfileResponse;
+    decision: CatSwipeDecision;
+};
 
 export function useDiscoverCats() {
     const [myCats, setMyCats] = useState<CatProfileResponse[]>([]);
@@ -16,9 +26,12 @@ export function useDiscoverCats() {
 
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingDiscover, setIsLoadingDiscover] = useState(false);
+    const [isRefilling, setIsRefilling] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [swipingCatId, setSwipingCatId] = useState<number | null>(null);
     const [matchMessage, setMatchMessage] = useState<string | null>(null);
+    const [lastSwipe, setLastSwipe] = useState<LastSwipe | null>(null);
+    const [isUndoing, setIsUndoing] = useState(false);
 
     useEffect(() => {
         async function loadMyCats() {
@@ -48,6 +61,7 @@ export function useDiscoverCats() {
         async function loadDiscoverCats() {
             if (!selectedSwiperCatId) {
                 setCats([]);
+                setLastSwipe(null);
                 return;
             }
 
@@ -55,8 +69,12 @@ export function useDiscoverCats() {
                 setIsLoadingDiscover(true);
                 setErrorMessage(null);
                 setMatchMessage(null);
+                setLastSwipe(null);
 
-                const discoverableCats = await discoverCatProfiles(selectedSwiperCatId);
+                const discoverableCats = await discoverCatProfiles(
+                    selectedSwiperCatId,
+                    DISCOVER_LIMIT
+                );
 
                 setCats(discoverableCats);
             } catch (error) {
@@ -76,6 +94,8 @@ export function useDiscoverCats() {
             return;
         }
 
+        const swipedCat = cats.find((cat) => cat.id === targetCatProfileId);
+
         try {
             setSwipingCatId(targetCatProfileId);
             setErrorMessage(null);
@@ -87,18 +107,79 @@ export function useDiscoverCats() {
                 decision,
             });
 
-            setCats((currentCats) =>
-                currentCats.filter((cat) => cat.id !== targetCatProfileId)
-            );
+            if (swipedCat) {
+                setLastSwipe({
+                    swiperCatProfileId: selectedSwiperCatId,
+                    targetCat: swipedCat,
+                    decision,
+                });
+            }
+
+            const remainingCats = cats.filter((cat) => cat.id !== targetCatProfileId);
+
+            setCats(remainingCats);
 
             if (swipeResponse.matched) {
                 setMatchMessage("It's a match! 😻");
+            }
+
+            if (remainingCats.length <= REFILL_THRESHOLD) {
+                await refillDiscoverCats(selectedSwiperCatId, remainingCats);
             }
         } catch (error) {
             console.error("Failed to swipe cat profile:", error);
             setErrorMessage("Could not save your swipe.");
         } finally {
             setSwipingCatId(null);
+        }
+    }
+
+    async function handleUndoLastSwipe() {
+        if (!lastSwipe) {
+            return;
+        }
+
+        try {
+            setIsUndoing(true);
+            setErrorMessage(null);
+            setMatchMessage(null);
+
+            await undoCatSwipe(
+                lastSwipe.swiperCatProfileId,
+                lastSwipe.targetCat.id
+            );
+
+            setCats((currentCats) => [
+                lastSwipe.targetCat,
+                ...currentCats.filter((cat) => cat.id !== lastSwipe.targetCat.id),
+            ]);
+
+            setLastSwipe(null);
+        } catch (error) {
+            console.error("Failed to undo swipe:", error);
+            setErrorMessage("Could not undo last swipe.");
+        } finally {
+            setIsUndoing(false);
+        }
+    }
+
+    async function refillDiscoverCats(
+        swiperCatProfileId: number,
+        currentCats: CatProfileResponse[]
+    ) {
+        try {
+            setIsRefilling(true);
+
+            const newCats = await discoverCatProfiles(
+                swiperCatProfileId,
+                DISCOVER_LIMIT
+            );
+
+            setCats((latestCats) => mergeUniqueCats(latestCats, newCats, currentCats));
+        } catch (error) {
+            console.error("Failed to refill discover cats:", error);
+        } finally {
+            setIsRefilling(false);
         }
     }
 
@@ -109,9 +190,26 @@ export function useDiscoverCats() {
         setSelectedSwiperCatId,
         isLoading,
         isLoadingDiscover,
+        isRefilling,
         errorMessage,
         swipingCatId,
         matchMessage,
+        lastSwipe,
+        isUndoing,
         handleSwipe,
+        handleUndoLastSwipe,
     };
+}
+
+function mergeUniqueCats(
+    latestCats: CatProfileResponse[],
+    newCats: CatProfileResponse[],
+    fallbackCurrentCats: CatProfileResponse[]
+): CatProfileResponse[] {
+    const baseCats = latestCats.length > 0 ? latestCats : fallbackCurrentCats;
+    const existingIds = new Set(baseCats.map((cat) => cat.id));
+
+    const uniqueNewCats = newCats.filter((cat) => !existingIds.has(cat.id));
+
+    return [...baseCats, ...uniqueNewCats];
 }

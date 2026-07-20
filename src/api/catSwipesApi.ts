@@ -29,3 +29,15 @@ export async function createCatSwipe(
 
     return response.data;
 }
+
+export async function undoCatSwipe(
+    swiperCatProfileId: number,
+    targetCatProfileId: number
+): Promise<void> {
+    await httpClient.delete(API_ROUTES.catSwipes.base, {
+        params: {
+            swiperCatProfileId,
+            targetCatProfileId,
+        },
+    });
+}
