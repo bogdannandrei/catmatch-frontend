@@ -43,6 +43,13 @@ export type UpdateCatProfileRequest = {
     profilePhotoUrl: string | null;
 };
 
+export type DiscoverCatProfilesFilters = {
+    city?: string;
+    country?: string;
+    breed?: string;
+    gender?: CatGender | "";
+};
+
 export async function getMyCatProfiles(): Promise<CatProfileResponse[]> {
     const response = await httpClient.get<CatProfileResponse[]>(
         API_ROUTES.catProfiles.my
@@ -88,15 +95,34 @@ export async function deleteCatProfile(catProfileId: number): Promise<void> {
 
 export async function discoverCatProfiles(
     swiperCatProfileId: number,
-    limit = 20
+    limit = 20,
+    filters: DiscoverCatProfilesFilters = {}
 ): Promise<CatProfileResponse[]> {
+    const params: Record<string, string | number> = {
+        swiperCatProfileId,
+        limit,
+    };
+
+    if (filters.city?.trim()) {
+        params.city = filters.city.trim();
+    }
+
+    if (filters.country?.trim()) {
+        params.country = filters.country.trim();
+    }
+
+    if (filters.breed?.trim()) {
+        params.breed = filters.breed.trim();
+    }
+
+    if (filters.gender) {
+        params.gender = filters.gender;
+    }
+
     const response = await httpClient.get<CatProfileResponse[]>(
         API_ROUTES.catProfiles.discover,
         {
-            params: {
-                swiperCatProfileId,
-                limit,
-            },
+            params,
         }
     );
 

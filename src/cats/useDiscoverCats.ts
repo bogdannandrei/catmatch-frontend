@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import {
     discoverCatProfiles,
     getMyCatProfiles,
+    type CatGender,
     type CatProfileResponse,
+    type DiscoverCatProfilesFilters,
 } from "../api/catProfilesApi";
 import {
     createCatSwipe,
@@ -19,10 +21,27 @@ type LastSwipe = {
     decision: CatSwipeDecision;
 };
 
+type DiscoverFilterForm = {
+    city: string;
+    country: string;
+    breed: string;
+    gender: CatGender | "";
+};
+
+const EMPTY_FILTERS: DiscoverFilterForm = {
+    city: "",
+    country: "",
+    breed: "",
+    gender: "",
+};
+
 export function useDiscoverCats() {
     const [myCats, setMyCats] = useState<CatProfileResponse[]>([]);
     const [cats, setCats] = useState<CatProfileResponse[]>([]);
     const [selectedSwiperCatId, setSelectedSwiperCatId] = useState<number | null>(null);
+
+    const [filterForm, setFilterForm] = useState<DiscoverFilterForm>(EMPTY_FILTERS);
+    const [appliedFilters, setAppliedFilters] = useState<DiscoverFilterForm>(EMPTY_FILTERS);
 
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingDiscover, setIsLoadingDiscover] = useState(false);
@@ -33,6 +52,8 @@ export function useDiscoverCats() {
     const [matchedCat, setMatchedCat] = useState<CatProfileResponse | null>(null);
     const [lastSwipe, setLastSwipe] = useState<LastSwipe | null>(null);
     const [isUndoing, setIsUndoing] = useState(false);
+
+    const hasActiveFilters = hasFilters(appliedFilters);
 
     useEffect(() => {
         async function loadMyCats() {
@@ -63,6 +84,7 @@ export function useDiscoverCats() {
             if (!selectedSwiperCatId) {
                 setCats([]);
                 setLastSwipe(null);
+                setMatchedCat(null);
                 return;
             }
 
@@ -75,7 +97,8 @@ export function useDiscoverCats() {
 
                 const discoverableCats = await discoverCatProfiles(
                     selectedSwiperCatId,
-                    DISCOVER_LIMIT
+                    DISCOVER_LIMIT,
+                    appliedFilters
                 );
 
                 setCats(discoverableCats);
@@ -88,7 +111,33 @@ export function useDiscoverCats() {
         }
 
         loadDiscoverCats();
-    }, [selectedSwiperCatId]);
+    }, [selectedSwiperCatId, appliedFilters]);
+
+    function updateFilter<K extends keyof DiscoverFilterForm>(
+        field: K,
+        value: DiscoverFilterForm[K]
+    ) {
+        setFilterForm((currentFilters) => ({
+            ...currentFilters,
+            [field]: value,
+        }));
+    }
+
+    function handleApplyFilters(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        setAppliedFilters({
+            city: filterForm.city.trim(),
+            country: filterForm.country.trim(),
+            breed: filterForm.breed.trim(),
+            gender: filterForm.gender,
+        });
+    }
+
+    function handleClearFilters() {
+        setFilterForm(EMPTY_FILTERS);
+        setAppliedFilters(EMPTY_FILTERS);
+    }
 
     async function handleSwipe(targetCatProfileId: number, decision: CatSwipeDecision) {
         if (!selectedSwiperCatId) {
@@ -136,10 +185,6 @@ export function useDiscoverCats() {
         }
     }
 
-    function handleCloseMatchAnimation() {
-        setMatchedCat(null);
-    }
-
     async function handleUndoLastSwipe() {
         if (!lastSwipe) {
             return;
@@ -149,6 +194,7 @@ export function useDiscoverCats() {
             setIsUndoing(true);
             setErrorMessage(null);
             setMatchMessage(null);
+            setMatchedCat(null);
 
             await undoCatSwipe(
                 lastSwipe.swiperCatProfileId,
@@ -169,6 +215,10 @@ export function useDiscoverCats() {
         }
     }
 
+    function handleCloseMatchAnimation() {
+        setMatchedCat(null);
+    }
+
     async function refillDiscoverCats(
         swiperCatProfileId: number,
         currentCats: CatProfileResponse[]
@@ -178,7 +228,8 @@ export function useDiscoverCats() {
 
             const newCats = await discoverCatProfiles(
                 swiperCatProfileId,
-                DISCOVER_LIMIT
+                DISCOVER_LIMIT,
+                appliedFilters
             );
 
             setCats((latestCats) => mergeUniqueCats(latestCats, newCats, currentCats));
@@ -194,17 +245,25 @@ export function useDiscoverCats() {
         cats,
         selectedSwiperCatId,
         setSelectedSwiperCatId,
+
+        filterForm,
+        updateFilter,
+        handleApplyFilters,
+        handleClearFilters,
+        hasActiveFilters,
+
         isLoading,
         isLoadingDiscover,
         isRefilling,
         errorMessage,
         swipingCatId,
         matchMessage,
+        matchedCat,
         lastSwipe,
         isUndoing,
+
         handleSwipe,
         handleUndoLastSwipe,
-        matchedCat,
         handleCloseMatchAnimation,
     };
 }
@@ -220,4 +279,13 @@ function mergeUniqueCats(
     const uniqueNewCats = newCats.filter((cat) => !existingIds.has(cat.id));
 
     return [...baseCats, ...uniqueNewCats];
+}
+
+function hasFilters(filters: DiscoverCatProfilesFilters): boolean {
+    return Boolean(
+        filters.city
+        || filters.country
+        || filters.breed
+        || filters.gender
+    );
 }
