@@ -14,6 +14,7 @@ export function ChatRoomPage() {
         currentUserId,
         isLoading,
         isSending,
+        isPolling,
         errorMessage,
         handleSendMessage,
         handleBackToChats,
@@ -59,6 +60,11 @@ export function ChatRoomPage() {
                                     <strong>
                                         {conversation.otherDisplayName || conversation.otherUsername}
                                     </strong>
+                                </p>
+                            )}
+                            {isPolling && (
+                                <p className="tiny-note">
+                                    Checking for new messages...
                                 </p>
                             )}
                         </div>
