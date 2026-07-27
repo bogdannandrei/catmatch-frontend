@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     type CatGender,
+    type CatProfileResponse,
     getCatProfile,
     type UpdateCatProfileRequest,
     updateCatProfile,
@@ -12,6 +13,8 @@ export function useEditCat() {
     const { id } = useParams();
 
     const catProfileId = Number(id);
+
+    const [catProfile, setCatProfile] = useState<CatProfileResponse | null>(null);
 
     const [name, setName] = useState("");
     const [breed, setBreed] = useState("");
@@ -38,16 +41,17 @@ export function useEditCat() {
                 setIsLoading(true);
                 setErrorMessage(null);
 
-                const catProfile = await getCatProfile(catProfileId);
+                const loadedCatProfile = await getCatProfile(catProfileId);
 
-                setName(catProfile.name);
-                setBreed(catProfile.breed || "");
-                setGender(catProfile.gender);
-                setBirthDate(catProfile.birthDate || "");
-                setBio(catProfile.bio || "");
-                setCity(catProfile.city || "");
-                setCountry(catProfile.country || "");
-                setProfilePhotoUrl(catProfile.profilePhotoUrl || "");
+                setCatProfile(loadedCatProfile);
+                setName(loadedCatProfile.name);
+                setBreed(loadedCatProfile.breed || "");
+                setGender(loadedCatProfile.gender);
+                setBirthDate(loadedCatProfile.birthDate || "");
+                setBio(loadedCatProfile.bio || "");
+                setCity(loadedCatProfile.city || "");
+                setCountry(loadedCatProfile.country || "");
+                setProfilePhotoUrl(loadedCatProfile.profilePhotoUrl || "");
             } catch (error) {
                 console.error("Failed to load cat profile:", error);
                 setErrorMessage("Could not load cat profile.");
@@ -82,8 +86,9 @@ export function useEditCat() {
                 profilePhotoUrl: trimOrNull(profilePhotoUrl),
             };
 
-            await updateCatProfile(catProfileId, request);
+            const updatedCatProfile = await updateCatProfile(catProfileId, request);
 
+            setCatProfile(updatedCatProfile);
             navigate("/my-cats");
         } catch (error) {
             console.error("Failed to update cat profile:", error);
@@ -93,11 +98,13 @@ export function useEditCat() {
         }
     }
 
-    function handleCancel() {
+    function handleBack() {
         navigate("/my-cats");
     }
 
     return {
+        catProfile,
+        setCatProfile,
         name,
         setName,
         breed,
@@ -118,7 +125,7 @@ export function useEditCat() {
         isSaving,
         errorMessage,
         handleSubmit,
-        handleCancel,
+        handleBack,
     };
 }
 

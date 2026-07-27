@@ -15,6 +15,7 @@ export const API_ROUTES = {
         my: `${API_PREFIX}/cat-profiles/my`,
         discover: `${API_PREFIX}/cat-profiles/discover`,
         byId: (id: number) => `${API_PREFIX}/cat-profiles/${id}`,
+        photo: (id: number) => `${API_PREFIX}/cat-profiles/${id}/photo`,
     },
     catSwipes: {
         base: `${API_PREFIX}/cat-swipes`,

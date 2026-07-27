@@ -102,3 +102,19 @@ export async function discoverCatProfiles(
 
     return response.data;
 }
+
+export async function uploadCatProfilePhoto(
+    catProfileId: number,
+    photo: File
+): Promise<CatProfileResponse> {
+    const formData = new FormData();
+
+    formData.append("photo", photo);
+
+    const response = await httpClient.post<CatProfileResponse>(
+        API_ROUTES.catProfiles.photo(catProfileId),
+        formData
+    );
+
+    return response.data;
+}
