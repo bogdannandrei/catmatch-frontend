@@ -3,6 +3,7 @@ import {FloatingPaws} from "../components/FloatingPaws";
 import {useDiscoverCats} from "./useDiscoverCats";
 import {AppNav} from "../components/AppNav.tsx";
 import {DiscoverCatDeck} from "./DiscoverCatDeck";
+import { MatchCelebration } from "./MatchCelebration";
 
 export function DiscoverCatsPage() {
     const {
@@ -16,11 +17,17 @@ export function DiscoverCatsPage() {
         errorMessage,
         swipingCatId,
         matchMessage,
+        matchedCat,
         lastSwipe,
         isUndoing,
         handleSwipe,
         handleUndoLastSwipe,
+        handleCloseMatchAnimation,
     } = useDiscoverCats();
+
+    const selectedSwiperCat = myCats.find(
+        (cat) => cat.id === selectedSwiperCatId
+    ) || null;
 
     return (
         <main className="app-page explosive-page">
@@ -150,6 +157,12 @@ export function DiscoverCatsPage() {
                     )}
                 </section>
             </div>
+
+            <MatchCelebration
+                myCat={selectedSwiperCat}
+                matchedCat={matchedCat}
+                onClose={handleCloseMatchAnimation}
+            />
         </main>
     );
 }

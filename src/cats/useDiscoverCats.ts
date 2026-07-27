@@ -30,6 +30,7 @@ export function useDiscoverCats() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [swipingCatId, setSwipingCatId] = useState<number | null>(null);
     const [matchMessage, setMatchMessage] = useState<string | null>(null);
+    const [matchedCat, setMatchedCat] = useState<CatProfileResponse | null>(null);
     const [lastSwipe, setLastSwipe] = useState<LastSwipe | null>(null);
     const [isUndoing, setIsUndoing] = useState(false);
 
@@ -69,6 +70,7 @@ export function useDiscoverCats() {
                 setIsLoadingDiscover(true);
                 setErrorMessage(null);
                 setMatchMessage(null);
+                setMatchedCat(null);
                 setLastSwipe(null);
 
                 const discoverableCats = await discoverCatProfiles(
@@ -119,8 +121,8 @@ export function useDiscoverCats() {
 
             setCats(remainingCats);
 
-            if (swipeResponse.matched) {
-                setMatchMessage("It's a match! 😻");
+            if (swipeResponse.matched && swipedCat) {
+                setMatchedCat(swipedCat);
             }
 
             if (remainingCats.length <= REFILL_THRESHOLD) {
@@ -132,6 +134,10 @@ export function useDiscoverCats() {
         } finally {
             setSwipingCatId(null);
         }
+    }
+
+    function handleCloseMatchAnimation() {
+        setMatchedCat(null);
     }
 
     async function handleUndoLastSwipe() {
@@ -198,6 +204,8 @@ export function useDiscoverCats() {
         isUndoing,
         handleSwipe,
         handleUndoLastSwipe,
+        matchedCat,
+        handleCloseMatchAnimation,
     };
 }
 
